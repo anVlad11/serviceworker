@@ -50,31 +50,31 @@ if (
     }
 
     // get permission on subscribe only once
-    bt_register.on('click', function() {
+    bt_register.on('click', function () {
         getToken();
     });
 
-    bt_delete.on('click', function() {
+    bt_delete.on('click', function () {
         // Delete Instance ID token.
         messaging.getToken()
-            .then(function(currentToken) {
+            .then(function (currentToken) {
                 messaging.deleteToken(currentToken)
-                    .then(function() {
+                    .then(function () {
                         console.log('Token deleted');
                         setTokenSentToServer(false);
                         // Once token is deleted update UI.
                         resetUI();
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         showError('Unable to delete token', error);
                     });
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 showError('Error retrieving Instance ID token', error);
             });
     });
 
-    form.on('submit', function(event) {
+    form.on('submit', function (event) {
         event.preventDefault();
 
         var notification = {};
@@ -87,25 +87,25 @@ if (
     });
 
     // handle catch the notification on current page
-    messaging.onMessage(function(payload) {
+    messaging.onMessage(function (payload) {
         console.log('Message received', payload);
         info.show();
         info_message
             .text('')
-            .append('<strong>'+payload.data.title+'</strong>')
-            .append('<em>'+payload.data.body+'</em>')
+            .append('<strong>' + payload.data.title + '</strong>')
+            .append('<em>' + payload.data.body + '</em>')
         ;
 
         // register fake ServiceWorker for show notification on mobile devices
         navigator.serviceWorker.register('/serviceworker/firebase-messaging-sw.js');
-        Notification.requestPermission(function(permission) {
+        Notification.requestPermission(function (permission) {
             if (permission === 'granted') {
-                navigator.serviceWorker.ready.then(function(registration) {
-                  // Copy data object to get parameters in the click handler
-                  payload.data.data = JSON.parse(JSON.stringify(payload.data));
+                navigator.serviceWorker.ready.then(function (registration) {
+                    // Copy data object to get parameters in the click handler
+                    payload.data.data = JSON.parse(JSON.stringify(payload.data));
 
-                  registration.showNotification(payload.data.title, payload.data);
-                }).catch(function(error) {
+                    registration.showNotification(payload.data.title, payload.data);
+                }).catch(function (error) {
                     // registration failed :(
                     showError('ServiceWorker registration failed', error);
                 });
@@ -114,15 +114,15 @@ if (
     });
 
     // Callback fired if Instance ID token is updated.
-    messaging.onTokenRefresh(function() {
+    messaging.onTokenRefresh(function () {
         messaging.getToken()
-            .then(function(refreshedToken) {
+            .then(function (refreshedToken) {
                 console.log('Token refreshed');
                 // Send Instance ID token to app server.
                 sendTokenToServer(refreshedToken);
                 updateUIForPushEnabled(refreshedToken);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 showError('Unable to retrieve refreshed token', error);
             });
     });
@@ -154,11 +154,11 @@ if (
 
 function getToken() {
     messaging.requestPermission()
-        .then(function() {
+        .then(function () {
             // Get Instance ID token. Initially this makes a network call, once retrieved
             // subsequent calls to getToken will return from cache.
             messaging.getToken()
-                .then(function(currentToken) {
+                .then(function (currentToken) {
 
                     if (currentToken) {
                         sendTokenToServer(currentToken);
@@ -169,13 +169,13 @@ function getToken() {
                         setTokenSentToServer(false);
                     }
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     showError('An error occurred while retrieving token', error);
                     updateUIForPushPermissionRequired();
                     setTokenSentToServer(false);
                 });
         })
-        .catch(function(error) {
+        .catch(function (error) {
             showError('Unable to get permission to notify', error);
         });
 }
@@ -191,7 +191,7 @@ function sendNotification(notification) {
     massage_row.hide();
 
     messaging.getToken()
-        .then(function(currentToken) {
+        .then(function (currentToken) {
             fetch('https://fcm.googleapis.com/fcm/send', {
                 method: 'POST',
                 headers: {
@@ -204,9 +204,9 @@ function sendNotification(notification) {
                     data: notification,
                     to: currentToken
                 })
-            }).then(function(response) {
+            }).then(function (response) {
                 return response.json();
-            }).then(function(json) {
+            }).then(function (json) {
                 console.log('Response', json);
 
                 if (json.success === 1) {
@@ -216,11 +216,11 @@ function sendNotification(notification) {
                     massage_row.hide();
                     massage_id.text(json.results[0].error);
                 }
-            }).catch(function(error) {
+            }).catch(function (error) {
                 showError(error);
             });
         })
-        .catch(function(error) {
+        .catch(function (error) {
             showError('Error retrieving Instance ID token', error);
         });
 }
@@ -282,4 +282,28 @@ function showError(error, error_data) {
 
     alert.show();
     alert_message.html(error);
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const API_URL = 'http://localhost:9099/push';
+if (urlParams.get('push_id') !== null) {
+    let push = {
+        'client_id': urlParams.get('client_id'),
+        'device_id': urlParams.get('device_id'),
+        'push_id': urlParams.get('push_id'),
+    };
+    fetch(API_URL + '/delivered', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([push,]),
+    });
+    fetch(API_URL + '/opened', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([push,]),
+    });
 }
