@@ -298,12 +298,14 @@ if (urlParams.get('push_id') !== null) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify([push,]),
-    });
-    fetch(API_URL + '/opened', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([push,]),
-    });
+    })
+        .then(function () {
+            fetch(API_URL + '/opened', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify([push,]),
+            })
+        });
 }
