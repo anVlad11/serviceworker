@@ -288,7 +288,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const API_URL = 'http://localhost:9099/push';
 if (urlParams.get('push_id') !== null) {
     let push = {
-        'client_id': urlParams.get('client_id'),
+        'client_id': parseInt(urlParams.get('client_id')),
         'device_id': urlParams.get('device_id'),
         'push_id': urlParams.get('push_id'),
     };
