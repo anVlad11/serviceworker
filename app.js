@@ -317,7 +317,8 @@ function updatePushMessage(tokenText) {
                 }
             }
         ]
-    }, null, 4)
+    }, null, 4);
+    pushMessageDiv.innerText = JSON.stringify(JSON.parse(pushMessageDiv.innerText), null, 4);
 }
 
 function randomInteger(min, max) {
