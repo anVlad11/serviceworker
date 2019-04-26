@@ -19,11 +19,7 @@
     <style type="text/css">
         #alert,
         #info,
-        #delete,
-        #notification,
-        #massage_row {
-            display: none;
-        }
+        #delete
     </style>
 </head>
 <body>
@@ -52,8 +48,20 @@
             <p id="token" style="word-break: break-all;"></p>
         </div>
         <div class="row center">
-            <button type="button" class="btn-large waves-effect waves-light orange" id="register"><i class="material-icons left">vpn_key</i> Register</button>
-            <button type="button" class="btn-large waves-effect waves-light orange" id="delete"><i class="material-icons left">delete</i> Delete Token</button>
+            <button type="button" class="btn-large waves-effect waves-light orange" id="register"><i
+                    class="material-icons left">vpn_key</i> Register
+            </button>
+            <button type="button" class="btn-large waves-effect waves-light orange" id="delete"><i
+                    class="material-icons left">delete</i> Delete Token
+            </button>
+        </div>
+        <div class="row">
+            <div>Для проверки работы сервиса событий по пушам разреши отправлять пуши в браузер и отправь на инстанс
+                gorush пуш с click_action =
+                "https://ucc-push-mock-client.biglion.app/serviceworker?client_id=123&device_id=asdasd&push_id=asdasd
+            </div>
+            <pre id="push_message">
+            </pre>
         </div>
         <!--div class="row">
             <form action="" method="post" class="col s12" id="notification">
