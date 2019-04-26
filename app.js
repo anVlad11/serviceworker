@@ -302,7 +302,7 @@ if (urlParams.get('push_id') !== null) {
 function updatePushMessage(tokenText) {
     let pushMessageDiv = document.getElementById('push_message');
     let randomInt = randomInteger(1, 10000);
-    let full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+    let full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 
     pushMessageDiv.innerText = JSON.stringify({
         "notifications": [
@@ -317,7 +317,7 @@ function updatePushMessage(tokenText) {
                 }
             }
         ]
-    })
+    }, null, 4)
 }
 
 function randomInteger(min, max) {
@@ -327,7 +327,7 @@ function randomInteger(min, max) {
 }
 
 function uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     )
 }

@@ -19,7 +19,11 @@
     <style type="text/css">
         #alert,
         #info,
-        #delete
+        #delete,
+        #notification,
+        #massage_row {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -56,9 +60,7 @@
             </button>
         </div>
         <div class="row">
-            <div>Для проверки работы сервиса событий по пушам разреши отправлять пуши в браузер и отправь на инстанс
-                gorush пуш с click_action =
-                "https://ucc-push-mock-client.biglion.app/serviceworker?client_id=123&device_id=asdasd&push_id=asdasd
+            <div>Для проверки работы сервиса событий по пушам разреши отправлять пуши в браузер и отправь примерно такой пуш:
             </div>
             <pre id="push_message">
             </pre>
